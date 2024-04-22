@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import guru.springframework.spring6restmvc.model.Customer;
+import guru.springframework.spring6restmvc.model.CustomerDTO;
 
 public interface CustomerService {
-  List<Customer> listCustomers();
-  Optional<Customer> getCustomerById(UUID id);
-  Customer saveNewCustomer(Customer customer);
-  void updateCustomerById(UUID id, Customer customer);
-  void deleteById(UUID customerId);
-  void patchCustomerById(UUID customerId, Customer customer);
+  List<CustomerDTO> listCustomers();
+  Optional<CustomerDTO> getCustomerById(UUID id);
+  CustomerDTO saveNewCustomer(CustomerDTO customer);
+  Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO customer);
+  Boolean deleteById(UUID customerId);
+  Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO customer);
 }

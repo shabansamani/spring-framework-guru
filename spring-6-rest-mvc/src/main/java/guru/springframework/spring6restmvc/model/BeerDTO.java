@@ -13,7 +13,7 @@ import jakarta.validation.constraints.*;
 public class BeerDTO {
   private UUID id;
   private Integer version;
-  
+
   @NotBlank
   @NotNull
   private String beerName;

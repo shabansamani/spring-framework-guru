@@ -24,7 +24,6 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -137,7 +136,7 @@ class BeerControllerIT {
         final String beerName = "UPDATED";
         beerDTO.setBeerName(beerName);
 
-        ResponseEntity responseEntity = beerController.updateBeerPatchById(beer.getId(), beerDTO);
+        ResponseEntity<?> responseEntity = beerController.updateBeerPatchById(beer.getId(), beerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Beer updatedBeer = beerRepository.findById(beer.getId()).get();
@@ -169,7 +168,7 @@ class BeerControllerIT {
     @Test
     void deleteByIdFound() {
         Beer beer = beerRepository.findAll().get(0);
-        ResponseEntity responseEntity = beerController.deleteById(beer.getId());
+        ResponseEntity<?> responseEntity = beerController.deleteById(beer.getId());
         assertThat(beerRepository.findById(beer.getId())).isEmpty();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
     }
@@ -195,7 +194,7 @@ class BeerControllerIT {
         final String beerName = "UPDATED";
         beerDTO.setBeerName(beerName);
 
-        ResponseEntity responseEntity = beerController.updateById(beer.getId(), beerDTO);
+        ResponseEntity<?> responseEntity = beerController.updateById(beer.getId(), beerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Beer updatedBeer = beerRepository.findById(beer.getId()).get();
@@ -238,10 +237,11 @@ class BeerControllerIT {
     @Test
     void testSaveNewBeer() {
         BeerDTO beerDTO = BeerDTO.builder().beerName("New Beer").build();
-        ResponseEntity responseEntity = beerController.handlePost(beerDTO);
+        ResponseEntity<?> responseEntity = beerController.handlePost(beerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
         assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
 
+        @SuppressWarnings("null")
         String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
         UUID savedUUID = UUID.fromString(locationUUID[4]);
 

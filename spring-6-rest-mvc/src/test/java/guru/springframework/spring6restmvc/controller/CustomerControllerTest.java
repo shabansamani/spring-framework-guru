@@ -1,7 +1,10 @@
 package guru.springframework.spring6restmvc.controller;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -17,8 +20,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.hamcrest.core.Is.is;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -29,7 +30,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import guru.springframework.spring6restmvc.model.CustomerDTO;

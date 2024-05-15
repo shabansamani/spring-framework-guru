@@ -65,10 +65,11 @@ class CustomerControllerIT {
     @Test
     void testSaveNewCustomer() {
         CustomerDTO customerDTO = CustomerDTO.builder().customerName("New Customer").build();
-        ResponseEntity responseEntity = customerController.handlePost(customerDTO);
+        ResponseEntity<?> responseEntity = customerController.handlePost(customerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
         assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
 
+        @SuppressWarnings("null")
         String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
         UUID savedUUID = UUID.fromString(locationUUID[4]);
         Customer customer = customerRepository.findById(savedUUID).orElse(null);
@@ -86,7 +87,7 @@ class CustomerControllerIT {
         final String customerName = "UPDATED";
         customerDTO.setCustomerName(customerName);
 
-        ResponseEntity responseEntity = customerController.updateById(customer.getId(), customerDTO);
+        ResponseEntity<?> responseEntity = customerController.updateById(customer.getId(), customerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Customer updatedCustomer = customerRepository.findById(customer.getId()).get();
@@ -103,7 +104,7 @@ class CustomerControllerIT {
     @Test
     void deleteByIdFound() {
         Customer customer = customerRepository.findAll().get(0);
-        ResponseEntity responseEntity = customerController.deleteById(customer.getId());
+        ResponseEntity<?> responseEntity = customerController.deleteById(customer.getId());
         assertThat(customerRepository.findById(customer.getId())).isEmpty();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
     }
@@ -124,7 +125,7 @@ class CustomerControllerIT {
         final String customerName = "UPDATED";
         customerDTO.setCustomerName(customerName);
 
-        ResponseEntity responseEntity = customerController.updateCustomerPatchById(customer.getId(), customerDTO);
+        ResponseEntity<?> responseEntity = customerController.updateCustomerPatchById(customer.getId(), customerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Customer updatedCustomer = customerRepository.findById(customer.getId()).get();

@@ -16,11 +16,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @DataJpaTest
 @Import({BootstrapData.class, BeerCsvServiceImpl.class})
 class BeerRepositoryTest {
+
     @Autowired
     BeerRepository beerRepository;
 

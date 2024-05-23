@@ -11,6 +11,7 @@ import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
@@ -35,6 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @SpringBootTest
 class BeerControllerIT {
@@ -56,14 +59,28 @@ class BeerControllerIT {
 
     MockMvc mockMvc;
 
+    static String username = "user1";
+
+    static String password = "password";
+
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+        .apply(springSecurity())
+        .build();
+    }
+
+    @Test
+    void testUnauthorizedRequest() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH))
+            .andExpect(status().isUnauthorized());
+        
     }
 
     @Test
     void tesListBeersByStyleAndNameShowInventoryTruePage2() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
+                    .with(httpBasic(username, password))
                     .queryParam("beerName", "IPA")
                     .queryParam("beerStyle", BeerStyle.IPA.name())
                     .queryParam("showInventory", "true")
@@ -77,6 +94,7 @@ class BeerControllerIT {
     @Test
     void testListBeersByStyleAndNameShowInventoryTrue() throws Exception { 
         mockMvc.perform(get(BeerController.BEER_PATH)
+                .with(httpBasic(username, password))
                 .queryParam("beerName", "IPA")
                 .queryParam("beerStyle", BeerStyle.IPA.name())
                 .queryParam("showInventory", "true")
@@ -89,6 +107,7 @@ class BeerControllerIT {
     @Test
     void testListBeersByStyleAndNameShowInventoryFalse() throws Exception { 
         mockMvc.perform(get(BeerController.BEER_PATH)
+                .with(httpBasic(username, password))
                 .queryParam("beerName", "IPA")
                 .queryParam("beerStyle", BeerStyle.IPA.name())
                 .queryParam("showInventory", "false")
@@ -101,6 +120,7 @@ class BeerControllerIT {
     @Test
     void testListBeersByStyleAndName() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
+                .with(httpBasic(username, password))
                 .queryParam("beerName", "IPA")
                 .queryParam("beerStyle", BeerStyle.IPA.name())
                 .queryParam("pageSize", "800"))
@@ -111,6 +131,7 @@ class BeerControllerIT {
     @Test
     void testListBeersByName() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
+                .with(httpBasic(username, password))
                 .queryParam("beerName", "IPA")
                 .queryParam("pageSize", "800"))
                 .andExpect(status().isOk())
@@ -120,6 +141,7 @@ class BeerControllerIT {
     @Test
     void testListBeersByStyle() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
+                .with(httpBasic(username, password))
                 .queryParam("beerStyle", BeerStyle.LAGER.name())
                 .queryParam("pageSize", "800"))
                 .andExpect(status().isOk())
@@ -151,6 +173,7 @@ class BeerControllerIT {
         beerMap.put("beerName", "New Name 8403840184081-348938401848148184-183-481948-185819581479184701340917340713094719037409173408173");
 
         mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getId())
+                        .with(httpBasic(username, password))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))

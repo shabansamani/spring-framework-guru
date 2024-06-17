@@ -1,5 +1,6 @@
 package guru.springframework.spring_6_reactive_r2dbc.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import guru.springframework.spring_6_reactive_r2dbc.model.CustomerDTO;
@@ -28,13 +30,17 @@ public class CustomerController {
 
     @DeleteMapping(CUSTOMER_PATH_ID)
     public Mono<ResponseEntity<Void>> deleteExistingCustomer(@PathVariable("customerId") Integer customerId) {
-        return customerService.deleteCustomer(customerId).thenReturn(ResponseEntity.noContent().build());
+        return customerService.getCustomerById(customerId)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+                .map(customerDto -> customerService.deleteCustomer(customerDto.getId()))
+                .thenReturn(ResponseEntity.noContent().build());
     }
 
     @PatchMapping(CUSTOMER_PATH_ID)
     public Mono<ResponseEntity<Void>> patchExistingCustomer(@PathVariable("customerId") Integer customerId,
             @Validated @RequestBody CustomerDTO customerDTO) {
         return customerService.patchCustomer(customerId, customerDTO)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                 .map(savedDto -> ResponseEntity.ok().build());
     }
 
@@ -42,6 +48,7 @@ public class CustomerController {
     public Mono<ResponseEntity<Void>> updateExistingCustomer(@PathVariable("customerId") Integer customerId,
             @Validated @RequestBody CustomerDTO customerDTO) {
         return customerService.updateCustomer(customerId, customerDTO)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                 .map(savedDto -> ResponseEntity.noContent().build());
     }
 
@@ -55,7 +62,8 @@ public class CustomerController {
 
     @GetMapping(CUSTOMER_PATH_ID)
     public Mono<CustomerDTO> getCustomerById(@PathVariable("customerId") Integer customerId) {
-        return customerService.getCustomerById(customerId);
+        return customerService.getCustomerById(customerId)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
     @GetMapping(CUSTOMER_PATH)

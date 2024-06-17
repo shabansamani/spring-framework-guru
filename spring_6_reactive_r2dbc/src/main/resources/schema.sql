@@ -9,3 +9,11 @@ CREATE TABLE
         created_date timestamp,
         last_modified_date timestamp
     );
+
+CREATE TABLE
+    IF NOT EXISTS customer (
+        id integer NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        customer_name varchar(255),
+        created_date timestamp,
+        last_modified_date timestamp
+    );

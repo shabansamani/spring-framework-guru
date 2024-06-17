@@ -7,7 +7,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.spring_6_reactive_r2dbc.domain.Beer;
+import guru.springframework.spring_6_reactive_r2dbc.domain.Customer;
 import guru.springframework.spring_6_reactive_r2dbc.repositories.BeerRepository;
+import guru.springframework.spring_6_reactive_r2dbc.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -15,12 +17,17 @@ import lombok.RequiredArgsConstructor;
 public class BootStrapData implements CommandLineRunner {
 
     private final BeerRepository beerRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public void run(String... args) throws Exception {
         loadBeerData();
+        loadCustomerData();
         beerRepository.count().subscribe(count -> {
-            System.out.println("Count is: " + count);
+            System.out.println("Beer count is: " + count);
+        });
+        customerRepository.count().subscribe(count -> {
+            System.out.println("Customer count is: " + count);
         });
     }
 
@@ -61,6 +68,20 @@ public class BootStrapData implements CommandLineRunner {
                 beerRepository.save(beer1).subscribe();
                 beerRepository.save(beer2).subscribe();
                 beerRepository.save(beer3).subscribe();
+            }
+        });
+    }
+
+    private void loadCustomerData() {
+        customerRepository.count().subscribe(count -> {
+            if (count == 0) {
+                Customer customer1 = Customer.builder().customerName("Lawrence Penderson").build();
+                Customer customer2 = Customer.builder().customerName("Arin Hanson").build();
+                Customer customer3 = Customer.builder().customerName("Dan Avidan").build();
+
+                customerRepository.save(customer1).subscribe();
+                customerRepository.save(customer2).subscribe();
+                customerRepository.save(customer3).subscribe();
             }
         });
     }

@@ -14,20 +14,20 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class BeerRouterConfig {
-    public static final String BEER_PATH = "/api/v3/beer";
-    public static final String BEER_PATH_ID = BEER_PATH + "/{beerId}";
+  public static final String BEER_PATH = "/api/v3/beer";
+  public static final String BEER_PATH_ID = BEER_PATH + "/{beerId}";
 
-    private final BeerHandler handler;
+  private final BeerHandler handler;
 
-    @Bean
-    public RouterFunction<ServerResponse> beerRoutes() {
-        return route()
-                .GET(BEER_PATH, accept(APPLICATION_JSON), handler::listBeers)
-                .GET(BEER_PATH_ID, accept(APPLICATION_JSON), handler::getBeerById)
-                .POST(BEER_PATH, accept(APPLICATION_JSON), handler::createNewBeer)
-                .PUT(BEER_PATH_ID, accept(APPLICATION_JSON), handler::updateBeer)
-                .PATCH(BEER_PATH_ID, accept(APPLICATION_JSON), handler::patchBeer)
-                .DELETE(BEER_PATH_ID, accept(APPLICATION_JSON), handler::deleteBeerById)
-                .build();
-    }
+  @Bean
+  RouterFunction<ServerResponse> beerRoutes() {
+    return route()
+        .GET(BEER_PATH, accept(APPLICATION_JSON), handler::listBeers)
+        .GET(BEER_PATH_ID, accept(APPLICATION_JSON), handler::getBeerById)
+        .POST(BEER_PATH, accept(APPLICATION_JSON), handler::createNewBeer)
+        .PUT(BEER_PATH_ID, accept(APPLICATION_JSON), handler::updateBeer)
+        .PATCH(BEER_PATH_ID, accept(APPLICATION_JSON), handler::patchBeer)
+        .DELETE(BEER_PATH_ID, accept(APPLICATION_JSON), handler::deleteBeerById)
+        .build();
+  }
 }

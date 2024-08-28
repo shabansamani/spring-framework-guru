@@ -9,6 +9,7 @@ import org.springframework.web.client.RestClient;
 import guru.springframework.spring_6_restclient.model.BeerDTO;
 import guru.springframework.spring_6_restclient.model.BeerStyle;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Service
 @RequiredArgsConstructor
@@ -34,20 +35,41 @@ public class BeerClientImpl implements BeerClient {
 
   @Override
   public BeerDTO getBeerById(UUID beerId) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getBeerById'");
+    RestClient restClient = restClientBuilder.build();
+
+    return restClient.get()
+        .uri(uriBuilder -> uriBuilder.path(GET_BEER_BY_ID_PATH).build(beerId))
+        .retrieve()
+        .body(BeerDTO.class);
   }
 
   @Override
   public BeerDTO createBeer(BeerDTO newDto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'createBeer'");
+    RestClient restClient = restClientBuilder.build();
+    val location = restClient.post()
+        .uri(uriBuilder -> uriBuilder.path(GET_BEER_PATH).build())
+        .body(newDto)
+        .retrieve()
+        .toBodilessEntity()
+        .getHeaders()
+        .getLocation();
+
+    return restClient.get()
+        .uri(location.getPath())
+        .retrieve()
+        .body(BeerDTO.class);
   }
 
   @Override
   public BeerDTO updateBeer(BeerDTO beerDTO) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateBeer'");
+    RestClient restClient = restClientBuilder.build();
+    restClient.put()
+        .uri(uriBuilder -> uriBuilder.path(GET_BEER_BY_ID_PATH).build(beerDTO.getId()))
+        .body(beerDTO)
+        .retrieve()
+        .toBodilessEntity();
+
+    return getBeerById(beerDTO.getId());
   }
 
   @Override

@@ -13,7 +13,7 @@ public class BeerDTO {
   private UUID id;
   private Integer version;
   private String beerName;
-  private BeerStyle BeerStyle;
+  private BeerStyle beerStyle;
   private String upc;
   private Integer quantityOnHand;
   private BigDecimal price;

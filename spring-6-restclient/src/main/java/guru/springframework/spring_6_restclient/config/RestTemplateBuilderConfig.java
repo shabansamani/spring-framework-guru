@@ -10,12 +10,13 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 @Configuration
 public class RestTemplateBuilderConfig {
 
-  @Value("${rest.template.rootUrl")
+  @Value("${rest.template.rootUrl}")
   String rootUrl;
 
   @Bean
@@ -29,6 +30,11 @@ public class RestTemplateBuilderConfig {
         oAuth2AuthorizedClientService);
     authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
     return authorizedClientManager;
+  }
+
+  @Bean
+  public RestClient.Builder restClientBuilder(RestTemplateBuilder restTemplateBuilder) {
+    return RestClient.builder(restTemplateBuilder.build());
   }
 
   @Bean

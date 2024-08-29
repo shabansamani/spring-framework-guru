@@ -5,8 +5,10 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import guru.springframework.spring_6_restclient.model.BeerDTO;
+import guru.springframework.spring_6_restclient.model.BeerDTOPageImpl;
 import guru.springframework.spring_6_restclient.model.BeerStyle;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -22,15 +24,31 @@ public class BeerClientImpl implements BeerClient {
 
   @Override
   public Page<BeerDTO> listBeers() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'listBeers'");
+    return listBeers(null, null, null, null, null);
   }
 
   @Override
   public Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber,
       Integer pageSize) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'listBeers'");
+    RestClient restClient = restClientBuilder.build();
+
+    UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH);
+
+    if (beerName != null)
+      uriComponentsBuilder.queryParam("beerName", beerName);
+    if (beerStyle != null)
+      uriComponentsBuilder.queryParam("beerStyle", beerStyle);
+    if (showInventory != null)
+      uriComponentsBuilder.queryParam("showInventory", showInventory);
+    if (pageNumber != null)
+      uriComponentsBuilder.queryParam("pageNumber", pageNumber);
+    if (pageSize != null)
+      uriComponentsBuilder.queryParam("pageSize", pageSize);
+
+    return restClient.get()
+        .uri(uriComponentsBuilder.toUriString())
+        .retrieve()
+        .body(BeerDTOPageImpl.class);
   }
 
   @Override
@@ -74,8 +92,11 @@ public class BeerClientImpl implements BeerClient {
 
   @Override
   public void deleteBeer(UUID beerId) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'deleteBeer'");
+    RestClient restClient = restClientBuilder.build();
+    restClient.delete()
+        .uri(uriBuilder -> uriBuilder.path(GET_BEER_BY_ID_PATH).build(beerId))
+        .retrieve()
+        .toBodilessEntity();
   }
 
 }

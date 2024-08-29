@@ -7,7 +7,7 @@ import guru.springframework.spring_6_reactive_r2dbc.model.BeerDTO;
 
 @Mapper
 public interface BeerMapper {
-    Beer beerDTOToBeer(BeerDTO beerDTO);
+  Beer beerDTOToBeer(BeerDTO beerDTO);
 
-    BeerDTO beerToBeerDTO(Beer beer);
+  BeerDTO beerToBeerDTO(Beer beer);
 }

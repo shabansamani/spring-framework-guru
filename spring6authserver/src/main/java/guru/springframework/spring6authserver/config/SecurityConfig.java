@@ -46,12 +46,11 @@ public class SecurityConfig {
   public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
     http.securityMatcher(EndpointRequest.toAnyEndpoint())
         .authorizeHttpRequests(authorizeHttpRequestsSpec -> authorizeHttpRequestsSpec.anyRequest().permitAll());
-
     return http.build();
   }
 
   @Bean
-  @Order(1)
+  @Order(2)
   public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
     http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());

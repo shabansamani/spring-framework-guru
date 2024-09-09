@@ -35,9 +35,10 @@ management:
 #                 wiretap: true
 #             httpclient:
 #                 wiretap: true
-# logging:
-#   level:
-#     root: error
-#     reactor.netty: trace
-#     org.springframework.cloud.gateway: trace
-#     org.springframework.http.server.reactive: trace
+logging:
+  level:
+    org.zalando.logbook: trace
+#    root: error
+#    reactor.netty: trace
+#    org.springframework.cloud.gateway: trace
+#    org.springframework.http.server.reactive: trace
